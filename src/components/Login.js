@@ -21,7 +21,7 @@ class Login extends Component {
         event.preventDefault();
         const { userID } = this.state
         const from = this.props.location !== undefined && this.props.location.state !== undefined
-            ? this.props.location.state.from
+            ? this.props.location.state.from.pathname
             :  '/' 
         this.props.dispatch(setAuthedUser(userID));
         this.props.history.push(`${from}`);

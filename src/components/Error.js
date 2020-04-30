@@ -9,7 +9,7 @@ class Error extends React.Component {
       <CardBody>
         <CardTitle>PAGE NOT FOUND!</CardTitle>
         <p style={{ textAlign: "left" }}>
-          <button> <Link to="/"> Go to Home </Link> </button>
+          <button> <Link to="/login"> Go to Home </Link> </button>
         </p>
       </CardBody>
     </Card>

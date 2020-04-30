@@ -16,10 +16,14 @@ class NavBar extends Component {
   }
 
   render() {
-    const { authedUser, user } = this.props;
+    const { authedUser } = this.props
+
+    if (!authedUser)
+     return <Link to='/login'>Login</Link>
 
     return (
       <div>
+
         <Nav>
           <NavItem>
             <Users id={authedUser} />
@@ -37,6 +41,33 @@ class NavBar extends Component {
             <NavLink tag={Link} to='/logout'>Logout</NavLink>
           </NavItem>
         </Nav>
+
+        {/* {authedUser ? (
+          <ul className="nav-list">
+            <li>
+              <img src={user.avatarURL} className='avatar2' alt={`Avatar of ${user.name}`} />{user.name}
+            </li>
+            <li className="nav-item">
+              <Link to="/">Would You Rather</Link>
+            </li>
+            <li className="nav-item green">
+              <Link to="/add">+ Add new question</Link>
+            </li>
+            <li className="nav-item split">
+              <Link to="/leaderboard">Leaderboard</Link>
+            </li>
+            <li className="nav-item log-out">
+              <Link to="/logout">
+                <button className="log-out-button">Log Out</button>
+              </Link>
+            </li>
+          </ul>
+        ) : (
+            <ul className="nav-list">
+              <Link to='/login'>Login</Link>
+            </ul>
+          )} */}
+          
       </div>
     )
   }

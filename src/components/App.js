@@ -1,6 +1,6 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import { handleInitialData } from '../actions/shared'
 import Dashboard from './Dashboard'
@@ -20,32 +20,33 @@ class App extends Component {
   }
 
   render() {
+
     return (
       <Router>
         <div>
           <LoadingBar />
-          <Switch>
+          <Nav />
           {this.props.loading === true
-            ? <Route path='/' exact component={Login} />
-            :
-            <Fragment>
-              <Nav />
+                            ? null
+                            : 
+          <Switch>
+              <Route path='/login' exact component={Login} />
               <PrivateRoute path='/' exact component={Dashboard} />
               <PrivateRoute path='/leaderboard' exact component={LeaderBoard} />
               <PrivateRoute path='/add'  exact component={NewQuestion} />
               <PrivateRoute path="/questions/:id"  excat component={QuestionPage} />
               <Route path='/logout' component={Logout} />
-            </Fragment>
-          }
           {/* <Route component={Error} /> */}
          </Switch>
+  }
         </div>
       </Router>
     )
   }
 }
 
-function mapStateToProps({ authedUser, users }) {
+function mapStateToProps({ authedUser }) {
+
   return {
     loading: authedUser === null,
   }

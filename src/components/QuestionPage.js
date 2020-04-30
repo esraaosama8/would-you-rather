@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { handleSaveQuestionAnswer } from '../actions/shared'
-import Users from './Users'
 import { Card, CardHeader, CardBody, CardTitle, FormGroup, Label, Input, Form, Button, Row, Col } from 'reactstrap'
+import { Link } from 'react-router-dom'
 
 
 class QuestionPage extends Component {
@@ -22,75 +22,93 @@ class QuestionPage extends Component {
     }
 
     render() {
-        const { question, author, answer, total, percentageOne, percentageTwo, votesTwo, votesOne } = this.props
+        const { question, author, user,answer, total, percentageOne, percentageTwo, votesOne, votesTwo, falseQuestion } = this.props
         const { optionSelected } = this.state
 
-        return (
-            <Row>
-                <Col sm="12" md={{ size: 6, offset: 3 }}>
-                    <Card>
-                        <CardHeader>
-                            <Users id={author.id} />
-                        </CardHeader>
-                        <CardBody>
-                            <CardTitle>Would You Rather</CardTitle>
-                            {answer ?
-                                <div>
-                                    <FormGroup>
-                                        <FormGroup check disabled>
-                                            <Label check>
-                                                <Input type="radio" checked={answer === "optionOne"} readOnly/>
+        if (falseQuestion) {
+            return (
+                <div>
+                    <h2>404: Woops, seems like that question went rogue!</h2>
+                    <p>
+                        <Link to="/">
+                            <span>Return Home</span>
+                        </Link>
+                    </p>
+                </div>
+            )
+        }
+        if (question) {
+            return (
+                <Row>
+                    <Col sm="12" md={{ size: 6, offset: 3 }}>
+                        <Card>
+                            <CardHeader>
+                            <img src={user} className='avatar2' alt={`Avatar of ${author.id}`} />{author.id}
+                            </CardHeader>
+                            <CardBody>
+                                <CardTitle>Would You Rather</CardTitle>
+                                {answer ?
+                                    <div>
+                                        <FormGroup>
+                                            <FormGroup check disabled>
+                                                <Label check>
+                                                    <Input type="radio" checked={answer === "optionOne"} readOnly/>
                                                 Option One: {question.optionOne.text}
-                                            </Label>
-                                        </FormGroup>
-                                        <FormGroup check disabled>
-                                            <Label check>
-                                                <Input type="radio" checked={answer === "optionTwo"} readOnly/>
+                                                </Label>
+                                            </FormGroup>
+                                            <FormGroup check disabled>
+                                                <Label check>
+                                                    <Input type="radio" checked={answer === "optionTwo"} readOnly />
                                                 Option Two: {question.optionTwo.text}
-                                            </Label>
+                                                </Label>
+                                            </FormGroup>
                                         </FormGroup>
-                                    </FormGroup>
-                                    <div className="progress">
-                                        <div className="progress-one" style={{ width: `${percentageOne}%` }}>{`${percentageOne}%`}{` (${votesOne} vote for Option One)`}</div>
-                                        <div className="progress-two" style={{ width: `${percentageTwo}%` }}>{`${percentageTwo}%`}{` (${votesTwo} vote for Option Two)`}</div>
+                                        <div className="progress">
+                                            <div className="progress-one" style={{ width: `${percentageOne}%` }}>{`${percentageOne}%`}{` (${votesOne} vote for Option One)`}</div>
+                                            <div className="progress-two" style={{ width: `${percentageTwo}%` }}>{`${percentageTwo}%`}{` (${votesTwo} vote for Option Two)`}</div>
+
+                                        </div>
+                                        <div className="total">
+                                            Total number of votes: {total}
+                                        </div>
                                     </div>
-                                    <div className="total">
-                                        Total number of votes: {total}
-                                    </div>
-                                </div>
-                                :
-                                <Form onSubmit={this.handleQuestion}>
-                                    <FormGroup tag="fieldset">
-                                        <FormGroup >
-                                            <Label >
-                                                <Input type="radio" name="radio1" value="optionOne" onChange={this.handleSelect} />
-                                                {question.optionOne.text}
-                                            </Label>
+                                    :
+                                    <Form onSubmit={this.handleQuestion}>
+                                        <FormGroup tag="fieldset">
+                                            <FormGroup >
+                                                <Label >
+                                                    <Input type="radio" name="radio1" value="optionOne" onChange={this.handleSelect} />
+                                                    {question.optionOne.text}
+                                                </Label>
+                                            </FormGroup>
+                                            <FormGroup >
+                                                <Label >
+                                                    <Input type="radio" name="radio1" value="optionTwo" onChange={this.handleSelect} />
+                                                    {question.optionTwo.text}
+                                                </Label>
+                                            </FormGroup>
                                         </FormGroup>
-                                        <FormGroup >
-                                            <Label >
-                                                <Input type="radio" name="radio1" value="optionTwo" onChange={this.handleSelect} />
-                                                {question.optionTwo.text}
-                                            </Label>
-                                        </FormGroup>
-                                    </FormGroup>
-                                    <Button disabled={optionSelected === ''}>Submit</Button>
-                                </Form>
-                            }
-                        </CardBody>
-                    </Card>
-                </Col>
-            </Row>
-        )
+                                        <Button disabled={optionSelected === ''}>Submit</Button>
+                                    </Form>
+                                }
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            )
+        }
     }
 }
 
 
-function mapStateToProps({ questions, users, authedUser }, { match }) {
+function mapStateToProps({ questions, users, authedUser }, props) {
     const answers = users[authedUser].answers
-    const { id } = match.params
+    const { id } = props.match.params
     const question = questions[id]
+    const falseQuestion = !questions[id]
     const author = users[question.author]
+    const user = users[question.author].avatarURL
+
     let answer, percentageOne, percentageTwo, total, votesOne, votesTwo
 
     votesOne = question.optionOne.votes.length
@@ -106,12 +124,14 @@ function mapStateToProps({ questions, users, authedUser }, { match }) {
     return {
         question,
         author,
+        user,
         answer,
         total,
+        votesOne,
+        votesTwo,
         percentageOne,
         percentageTwo,
-        votesOne,
-        votesTwo
+        falseQuestion
     }
 }
 
