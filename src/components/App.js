@@ -25,9 +25,6 @@ class App extends Component {
         <div>
           <LoadingBar />
           <Nav />
-          {this.props.loading === true
-                            ? null
-                            : 
           <Switch>
               <Route path='/login' exact component={Login} />
               <PrivateRoute path='/' exact component={Dashboard} />
@@ -36,7 +33,6 @@ class App extends Component {
               <PrivateRoute path="/questions/:id"  excat component={QuestionPage} />
               <Route path='/logout' component={Logout} />
          </Switch>
-  }
         </div>
       </Router>
     )

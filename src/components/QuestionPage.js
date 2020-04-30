@@ -28,7 +28,7 @@ class QuestionPage extends Component {
         if (falseQuestion) {
             return (
                 <div>
-                    <h2>404: Woops, seems like that question went rogue!</h2>
+                    <h2>404: Question Not Found!</h2>
                     <p>
                         <Link to="/">
                             <span>Return Home</span>
@@ -106,6 +106,11 @@ function mapStateToProps({ questions, users, authedUser }, props) {
     const { id } = props.match.params
     const question = questions[id]
     const falseQuestion = !questions[id]
+    if (falseQuestion) {
+        return {
+           falseQuestion
+        }
+  }
     const author = users[question.author]
     const user = users[question.author].avatarURL
 
@@ -117,6 +122,7 @@ function mapStateToProps({ questions, users, authedUser }, props) {
     percentageOne = (question.optionOne.votes.length / total) * 100
     percentageTwo = (question.optionTwo.votes.length / total) * 100
 
+   
     if (answers.hasOwnProperty(question.id)) {
         answer = answers[question.id]
     }
