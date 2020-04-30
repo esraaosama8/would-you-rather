@@ -11,7 +11,6 @@ import LeaderBoard from './LeaderBoard'
 import Nav from './Nav'
 import Logout from './Logout'
 import QuestionPage from './QuestionPage'
-// import Error from './Error'
 import PrivateRoute from './PrivateRoute'
 
 class App extends Component {
@@ -36,7 +35,6 @@ class App extends Component {
               <PrivateRoute path='/add'  exact component={NewQuestion} />
               <PrivateRoute path="/questions/:id"  excat component={QuestionPage} />
               <Route path='/logout' component={Logout} />
-          {/* <Route component={Error} /> */}
          </Switch>
   }
         </div>
